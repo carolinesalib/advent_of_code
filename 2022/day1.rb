@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 input = [
   "6471",
   "1935",
