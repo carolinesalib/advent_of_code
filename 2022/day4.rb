@@ -22,7 +22,7 @@ input.each do |section1_value, section2_value|
   # p "Section 1: #{section1} - Section 2: #{section2}"
   # p "Section 1: #{section1_array} - Section 2: #{section2_array}"
 
-  if (section1_array - section2_array).empty? || (section2_array - section1_array).empty?
+  if (section1_array & section2_array).any? || (section2_array & section1_array).any?
     shift_overlap += 1
   end
 end
