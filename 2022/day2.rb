@@ -12,7 +12,7 @@ input = file_data.split("\n").map { |item| item.split(" ") }
 
 class Rock
   def wins
-    Scissors
+    [Scissors]
   end
 
   def score
@@ -22,7 +22,7 @@ end
 
 class Paper
   def wins
-    Rock
+    [Rock]
   end
 
   def score
@@ -32,7 +32,7 @@ end
 
 class Scissors
   def wins
-    Paper
+    [Paper]
   end
 
   def score
@@ -64,21 +64,36 @@ input.each do |opponent_choice_value, my_choice_value|
   # p "#{opponent_choice_value} #{my_choice_value}"
 
   opponent_choice_type = Object.const_get(opponent_choice_value).superclass
-  my_choice_type = Object.const_get(my_choice_value).superclass
+  opponent_choice = opponent_choice_type.new
 
-  my_choice = my_choice_type.new
+  my_choice = if my_choice_value == "Y"
+    opponent_choice
+  elsif my_choice_value == "Z"
+    ([Rock, Paper, Scissors] - [opponent_choice_type] - opponent_choice.wins).first.new
+  else
+    opponent_choice.wins.first.new
+  end
+
+  my_choice_type = my_choice.class
+  # my_choice = my_choice_type.new
 
   # p "#{opponent_choice_type} #{my_choice_type}"
 
   score = if opponent_choice_type == my_choice_type
     3
-  elsif my_choice.wins == opponent_choice_type
+  elsif my_choice.wins.include?(opponent_choice.class)
     6
   else
     0
   end
 
+  # p "my choice wins #{my_choice.wins} opponent choice #{opponent_choice.class}"
+  # p "my_choice.score #{my_choice.score} score #{score}"
+
   my_score = my_choice.score + score
+
+  # p "my_score #{my_score}"
+
   total_score += my_score
 end
 
