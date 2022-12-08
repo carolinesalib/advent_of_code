@@ -44,7 +44,7 @@ instructions.each do |move, from, to|
   # p "move #{move} from #{from} to #{to}"
 
   moving_elements = stack_hash[from].pop(move)
-  stack_hash[to].push(*moving_elements.reverse)
+  stack_hash[to].push(*moving_elements)
 
   # p "moving_elements #{moving_elements}"
   # p stack_hash
