@@ -151,7 +151,7 @@ input = input.split("\n").map { |i| i.split(" ") }
 cycle_count = 0
 
 class SignalStrengthCalculator
-  attr_reader :signal_strength, :register_x, :cycle_break
+  attr_reader :signal_strength, :register_x, :cycle_break, :CRT_drawning
 
   def initialize
     @signal_strength = {
@@ -162,7 +162,30 @@ class SignalStrengthCalculator
       180 => 0,
       220 => 0,
     }
+
+    @CRT_drawning = {
+      40 => "",
+      80 => "",
+      120 => "",
+      160 => "",
+      200 => "",
+      240 => "",
+    }
+
     @register_x = 1
+  end
+
+  def sprite_position
+    Array.new(40, ".").fill("#", @register_x - 1, 3)
+  end
+
+  def draw_pixel(cycle)
+    @CRT_drawning.each do |index, value|
+      if value.size < 40
+        @CRT_drawning[index] = value + sprite_position[@CRT_drawning[index].size]
+        return
+      end
+    end
   end
 
   def add_register(value)
@@ -187,6 +210,7 @@ input.each do |instruction, value|
 
   cycles.times do |i|
     cycle_count += 1
+    signal_strength_calculator.draw_pixel(cycle_count)
     signal_strength_calculator.add_strength(cycle_count, value)
   end
 
@@ -194,3 +218,4 @@ input.each do |instruction, value|
 end
 
 p signal_strength_calculator.total_signal_strength
+pp signal_strength_calculator.CRT_drawning.map { |_, v| v }
