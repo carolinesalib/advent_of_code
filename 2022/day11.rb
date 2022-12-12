@@ -58,13 +58,13 @@ class Monkey
     @inspected_items = []
   end
 
-  def round(monkey_rounds)
+  def round(monkey_rounds, all_dividends)
     print_result = "#{name}:\n"
 
     items.each do |item|
       old = item.to_i
       worry_level = eval(operation.join)
-      new_worry_level = worry_level / 3
+      new_worry_level = worry_level % all_dividends.reduce(:*)
       worry_test = new_worry_level % dividend == 0
       next_monkey_index = worry_test ? next_monkey_true_index : next_monkey_false_index
 
@@ -104,17 +104,19 @@ input.split("\n\n").map do |monkey|
 end
 
 monkey_rounds = MonkeyRounds.new(monkeys)
+all_dividends = monkeys.map(&:dividend)
 
-20.times do |round|
+10000.times do |round|
   monkeys.size.times do |index|
-    monkey_rounds = monkeys[index].round(monkey_rounds)
-    pp monkeys[index].print_result
+    monkey_rounds = monkeys[index].round(monkey_rounds, all_dividends)
+    # pp monkeys[index].print_result
     monkeys = monkey_rounds.monkeys
   end
 
   # monkeys.each do |monkey|
   #   p "Round #{round} #{monkey.name} #{monkey.items} #{monkey.inspected_items.sum}"
   # end
+  p "Round #{round}"
 end
 
 p monkeys.map(&:inspected_items).map(&:sum).max(2).inject(:*)
